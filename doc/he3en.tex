@@ -1,0 +1,105 @@
+\documentclass[a4paper]{article}
+
+\usepackage{amssymb}
+\usepackage{euscript}
+\usepackage{graphicx}
+\graphicspath{{pics/}}
+\usepackage{color}
+\usepackage{epsfig}
+\usepackage{fullpage}
+
+\newcommand{\image}[3]{
+\begin{figure}[#1]
+\begin{center}
+\includegraphics{full_#2.eps}
+\caption{\small#3}
+\label{image:#2}
+\end{center}
+\end{figure}
+}
+
+\def\ts{\theta^s}
+\def\ct{\cos\vartheta}
+\def\st{\sin\vartheta}
+\def\cts{\cos^2\vartheta}
+\def\sts{\sin^2\vartheta}
+
+\begin{document}
+
+This is a collection of matlab/octave scripts for testing various $^3$He-B
+energies. Energies are calculated using the order parameter rotation matrix $R$ or its
+representation via rotation axis and angle, $\vartheta$ and~$\bf n$. Unit vector $\bf n$
+can be represented using its azimuthal and polar angles~$\alpha$ and~$\beta$.
+
+A small rotation $\ts$ can be applied to the matrix. This means rotation of the spin space
+at~$|\ts|$ angle around $\hat\ts$ axis.
+
+{\bf 1. Small rotation.}
+{\tt test\_rot.m} script checks equivalence of the functions:
+\begin{eqnarray*}
+\mbox{\tt rot\_th0(R,ths)} &=& R_{ab}({\bf \ts}) R_{bj}\\
+\mbox{\tt rot\_th1(R,ths)} &=& 
+\left(\delta_{ab} - e_{abc}\ts_c + \frac12 \ts_a \ts_b
+ - \frac12 \delta_{ab}\ts_c \ts_c
+\right) R_{bj} + O(|\ts|^3)
+\end{eqnarray*}
+
+{\bf 2. Dipolar energy.}
+{\tt test\_d.m} script checks equivalence of the functions:
+\begin{eqnarray*}
+\mbox{\tt en\_d0(R)} &=& F_D(R) = R_{jj}R_{kk} + R_{jk}R_{kj}\\[2mm]
+\mbox{\tt en\_d1(R)} &=& \mbox{Tr} (R^2) + (\mbox{Tr} R)^2\\
+\mbox{\tt en\_d2(R)} &=& \frac12 (1 + 4\ct)^2 - \frac12
+\end{eqnarray*}
+
+{\bf 3. Dipolar energy after a small rotation.}
+{\tt test\_dr.m} script checks equivalence of the functions:
+
+\begin{eqnarray*}
+\mbox{\tt en\_dr0(R,ths)} &=&
+F_D\left(R_{ab}({\bf \ts}) R_{bj}\right) + O(|\ts|^3)\\[2mm]
+\mbox{\tt en\_dr1(R,ths)} &=&
+[ R_{jj} R_{kk} + R_{jk}R_{kj} ]\ (1-|\ts|^2)\\
+&+& [R_{aj} R_{kk} + R_{ak} R_{kj}]\ (\ts_j \ts_a - 2e_{ja a'}\ \ts_{a'}) \\
+&+& [R_{aj} R_{bk} + R_{ak} R_{bj}]\ e_{jaa'}\ \ts_{a'}\ e_{kbb'}\ \ts_{b'}
+\\[2mm]
+\mbox{\tt en\_dr2(R,ths)} &=&
+ - \frac12 + \frac12 (4\ct+1)^2\\
+ &-& 4(4\ct+1)\st\ ({\bf n}\cdot{\bf\ts})\\
+ &-& (4\ct^2+5\ct+1)\ |{\bf\ts}|^2\\
+ &+& (9 + 3\ct - 12\ct^2)\ ({\bf n}\cdot{\bf\ts})^2
+\end{eqnarray*}
+
+{\bf 4. Gradient energy.} In the gradient energy expression:
+$$
+F_\nabla \label{eq:He3_en_g}
+= \frac12 \Delta^2 \left[
+  K_1 (\nabla_j R_{ak})(\nabla_j R_{ak})
++ K_2 (\nabla_j R_{ak})(\nabla_k R_{aj})
++ K_3 (\nabla_j R_{aj})(\nabla_k R_{ak}) \right]
+$$
+three terms are calculated and compared separately.
+
+{\tt test\_gr0.m} script compares gradient energy, calculated using following
+expressions for the $\nabla R$:
+
+\begin{eqnarray*}
+\mbox{\tt en\_g(a,b,th, ga,gb,gt, dx):} &&\\
+\nabla_k R_{aj} &=&
+\frac{1}{dx}\left[
+R_{aj}(\alpha+\nabla_k\alpha\ dx,\ \beta+\nabla_k\beta\ dx,\ \vartheta+\nabla_k\vartheta\ dx) -
+R_{aj}(\alpha, \beta, \vartheta)\right]\\
+&+& O(dx^2)
+\\
+\mbox{\tt en\_gr1(a,b,th, ga,gb,gt):} &&\\
+\nabla_k R_{aj} &=&
+ [(1-\ct)(\delta_{al} n_j + \delta_{jl} n_a) - \st\ e_{ajl}]\ \nabla_k n_l\\
+&+& [\st\ (n_a n_j - \delta_{aj}) - \ct\ e_{ajl} n_l]\ \nabla_k \vartheta
+\end{eqnarray*}
+
+{\bf 5. Gradient energy after a small rotation.} 
+
+
+\end{document}
+
+
