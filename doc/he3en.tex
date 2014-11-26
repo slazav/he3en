@@ -18,7 +18,9 @@
 \end{figure}
 }
 
-\def\ts{\theta^s}
+\def\ts{{\theta^s}}
+\def\ta{{\theta^A}}
+\def\tb{{\theta^B}}
 \def\ct{\cos\vartheta}
 \def\st{\sin\vartheta}
 \def\cts{\cos^2\vartheta}
@@ -35,7 +37,7 @@ A small rotation $\ts$ can be applied to the matrix. This means rotation of the 
 at~$|\ts|$ angle around $\hat\ts$ axis.
 
 {\bf 1. Small rotation.}
-{\tt test\_rot.m} script checks equivalence of the functions:
+{\tt test\_rot1.m} script checks equivalence of the functions:
 \begin{eqnarray*}
 \mbox{\tt rot\_th0(R,ths)} &=& R_{ab}({\bf \ts}) R_{bj}\\
 \mbox{\tt rot\_th1(R,ths)} &=& 
@@ -44,7 +46,14 @@ at~$|\ts|$ angle around $\hat\ts$ axis.
 \right) R_{bj} + O(|\ts|^3)
 \end{eqnarray*}
 
-{\bf 2. Dipolar energy.}
+{\bf 2. Double rotation.}
+{\tt test\_rot2.m} script checks the expersion:
+$$
+R_{ab}(\tb)R_{bc}(\ta) R^0_{cj} \quad=\quad
+R_{ab}\left(\ta + \tb + \frac12 \ta\times\tb + O(\ta^3,\tb^3)\right) R^0_{bj}
+$$
+
+{\bf 3. Dipolar energy.}
 {\tt test\_d.m} script checks equivalence of the functions:
 \begin{eqnarray*}
 \mbox{\tt en\_d0(R)} &=& F_D(R) = R_{jj}R_{kk} + R_{jk}R_{kj}\\[2mm]
@@ -52,7 +61,7 @@ at~$|\ts|$ angle around $\hat\ts$ axis.
 \mbox{\tt en\_d2(R)} &=& \frac12 (1 + 4\ct)^2 - \frac12
 \end{eqnarray*}
 
-{\bf 3. Dipolar energy after a small rotation.}
+{\bf 4. Dipolar energy after a small rotation.}
 {\tt test\_dr.m} script checks equivalence of the functions:
 
 \begin{eqnarray*}
@@ -70,7 +79,7 @@ F_D\left(R_{ab}({\bf \ts}) R_{bj}\right) + O(|\ts|^3)\\[2mm]
  &+& (9 + 3\ct - 12\ct^2)\ ({\bf n}\cdot{\bf\ts})^2
 \end{eqnarray*}
 
-{\bf 4. Gradient energy.} In the gradient energy expression:
+{\bf 5. Gradient energy.} In the gradient energy expression:
 $$
 F_\nabla \label{eq:He3_en_g}
 = \frac12 \Delta^2 \left[
@@ -97,7 +106,7 @@ R_{aj}(\alpha, \beta, \vartheta)\right]\\
 &+& [\st\ (n_a n_j - \delta_{aj}) - \ct\ e_{ajl} n_l]\ \nabla_k \vartheta
 \end{eqnarray*}
 
-{\bf 5. Gradient energy after a small rotation.} 
+{\bf 6. Gradient energy after a small rotation.} 
 
 
 \end{document}
