@@ -28,29 +28,40 @@ function [e1 e2 e3] = en_gr1(a,b,t, ga,gb,gt, th, gth)
   end; end; end; end;
 
   e1=0; e2=0; e3=0;
-%  e1a=0; e2a=0; e3a=0;
+
+  % F_\nabla^0
   for k=1:3; for j=1:3;
     for c=1:3;
-%     e1 = e1 + gr0(c,j,k) * gr0(c,j,k);
-%     e2 = e2 + gr0(c,j,k) * gr0(c,k,j);
-%     e3 = e3 + gr0(c,j,j) * gr0(c,k,k);
+      e1 = e1 + gr0(c,j,k) * gr0(c,j,k);
+      e2 = e2 + gr0(c,j,k) * gr0(c,k,j);
+      e3 = e3 + gr0(c,j,j) * gr0(c,k,k);
     end
-    for a=1:3; for b=1:3; for c=1:3;
-%      xx = 2*ee(a,b,c)* gth(c,j);
-      xx = 2*ee(a,b,c)* gth(c,j) +  dd(c,1)*th(b) * gth(a,j) - dd(c,1)*th(a)*gth(b,j);
-      e1 = e1 + xx*r0(a,k)*gr0(b,k,j);
-      e2 = e2 + xx*r0(a,k)*gr0(b,j,k);
-      e3 = e3 + xx*r0(a,j)*gr0(b,k,k);
-    end; end; end;
-    for a=1:3; for b=1:3;
-      e2 = e2 - r0(a,k)*r0(b,j)*gth(b,j)*gth(a,k);
-      e3 = e3 - r0(a,j)*r0(b,k)*gth(b,j)*gth(a,k);
-    end end
-  end; end;
+  end; end
+
+  % (2K1 + K2 + K3) (\nabla_j th_a)(\nabla_j th_a)
   for j=1:3; for a=1:3;
       e1 = e1 + 2*gth(a,j)*gth(a,j);
       e2 = e2 + gth(a,j)*gth(a,j);
       e3 = e3 + gth(a,j)*gth(a,j);
   end; end
+
+  % (K2 R_aj R_bk - K3 R_ak R_bj) (\nabla_j th_a)(\nabla_k th_b)
+  for k=1:3; for j=1:3;
+    for a=1:3; for b=1:3;
+      e2 = e2 - r0(a,j)*r0(b,k)*gth(a,j)*gth(b,k);
+      e3 = e3 - r0(a,k)*r0(b,j)*gth(a,j)*gth(b,k);
+    end end
+  end; end
+
+  %
+  for k=1:3; for j=1:3;
+    for a=1:3; for b=1:3; for c=1:3;
+      xx = 2*ee(a,b,c)* gth(c,j) + dd(c,1)*th(b)*gth(a,j) - dd(c,1)*th(a)*gth(b,j);
+%      xx = 2*ee(a,b,c)* gth(c,j);
+      e1 = e1 + xx*r0(a,k)*gr0(b,k,j);
+      e2 = e2 + xx*r0(a,k)*gr0(b,j,k);
+      e3 = e3 + xx*r0(a,j)*gr0(b,k,k);
+    end; end; end;
+ end; end;
 
 end
