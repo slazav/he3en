@@ -1,7 +1,7 @@
 %% test a change of dipolar energy after a small rotation th
 function test_gr()
   addpath en
-  for i=1:1000;
+  for i=1:500;
     a=rand*pi;
     b=rand*pi;
     t=rand*pi;
@@ -26,9 +26,9 @@ function test_gr()
 
   end
   figure; hold on;
-  plot(x1,y1./x1.^2,'.r');
-  plot(x1,y2./x1.^2,'.g');
-  plot(x1,y3./x1.^2,'.b');
+  plot(x1,y1./x1.^3,'.r');
+  plot(x1,y2./x1.^3,'.g');
+  plot(x1,y3./x1.^3,'.b');
 
 
   xlabel('|ths|');

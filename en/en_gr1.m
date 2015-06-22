@@ -45,7 +45,7 @@ function [e1 e2 e3] = en_gr1(a,b,t, ga,gb,gt, th, gth)
       e3 = e3 + gth(a,j)*gth(a,j);
   end; end
 
-  % (K2 R_aj R_bk - K3 R_ak R_bj) (\nabla_j th_a)(\nabla_k th_b)
+  % - (K2 R_aj R_bk + K3 R_ak R_bj) (\nabla_j th_a)(\nabla_k th_b)
   for k=1:3; for j=1:3;
     for a=1:3; for b=1:3;
       e2 = e2 - r0(a,j)*r0(b,k)*gth(a,j)*gth(b,k);
@@ -56,7 +56,7 @@ function [e1 e2 e3] = en_gr1(a,b,t, ga,gb,gt, th, gth)
   %
   for k=1:3; for j=1:3;
     for a=1:3; for b=1:3; for c=1:3;
-      xx = 2*ee(a,b,c)* gth(c,j) + dd(c,1)*th(b)*gth(a,j) - dd(c,1)*th(a)*gth(b,j);
+      xx = (2*ee(a,b,c) + dd(c,a)*th(b) - dd(c,b)*th(a))*gth(c,j);
 %      xx = 2*ee(a,b,c)* gth(c,j);
       e1 = e1 + xx*r0(a,k)*gr0(b,k,j);
       e2 = e2 + xx*r0(a,k)*gr0(b,j,k);

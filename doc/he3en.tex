@@ -89,24 +89,63 @@ F_\nabla \label{eq:He3_en_g}
 $$
 three terms are calculated and compared separately.
 
-{\tt test\_gr0.m} script compares gradient energy, calculated using following
+{\tt test\_g.m} script compares gradient energy, calculated using following
 expressions for the $\nabla R$:
 
 \begin{eqnarray*}
-\mbox{\tt en\_g(a,b,th, ga,gb,gt, dx):} &&\\
+\mbox{\tt en\_g0(a,b,th, ga,gb,gt, dx):} &&\\
 \nabla_k R_{aj} &=&
 \frac{1}{dx}\left[
 R_{aj}(\alpha+\nabla_k\alpha\ dx,\ \beta+\nabla_k\beta\ dx,\ \vartheta+\nabla_k\vartheta\ dx) -
 R_{aj}(\alpha, \beta, \vartheta)\right]\\
 &+& O(dx^2)
 \\
-\mbox{\tt en\_gr1(a,b,th, ga,gb,gt):} &&\\
+\mbox{\tt en\_g1(a,b,th, ga,gb,gt):} &&\\
 \nabla_k R_{aj} &=&
  [(1-\ct)(\delta_{al} n_j + \delta_{jl} n_a) - \st\ e_{ajl}]\ \nabla_k n_l\\
 &+& [\st\ (n_a n_j - \delta_{aj}) - \ct\ e_{ajl} n_l]\ \nabla_k \vartheta
 \end{eqnarray*}
 
 {\bf 6. Gradient energy after a small rotation.} 
+
+{\tt test\_gr.m} script compares gradient energy, calculated using following
+expressions:
+
+\begin{eqnarray*}
+\mbox{\tt en\_gr0(a,b,th, ga,gb,gt, th,gth):} &&\mbox{direct calculation with} \\
+\nabla (R(\ts) R^0) &=& R(\ts) (\nabla R^0) + (\nabla R(\ts)) R^0
+\\
+\mbox{\tt en\_gr1(a,b,th, ga,gb,gt, th,gth):} &&\\
+   F_\nabla\ =\ F_\nabla^0
+&+& (2K_1+K_2+K_3)
+\ (\nabla_j \ts_a) (\nabla_j \ts_a)\\
+&-& [K_2 R^0_{aj} R^0_{bk} + K_3 R^0_{ak} R^0_{bj}]
+\ (\nabla_j \ts_a) (\nabla_k \ts_b)\\
+&+& [K_1 R^0_{ak} (\nabla_j R^0_{bk}) + K_2 R^0_{ak} (\nabla_k R^0_{bj})
+   + K_3 R^0_{aj} (\nabla_k R^0_{bk})]\times\\
+&&\times(2e_{abc} + \delta_{ac}\ts_b - \delta_{bc}\ts_a)\ (\nabla_j \ts_c) + O(|\ts|^3)
+\end{eqnarray*}
+
+
+
+%  % - (K2 R_aj R_bk + K3 R_ak R_bj) (\nabla_j th_a)(\nabla_k th_b)
+%  for k=1:3; for j=1:3;
+%    for a=1:3; for b=1:3;
+%      e2 = e2 - r0(a,j)*r0(b,k)*gth(a,j)*gth(b,k);
+%      e3 = e3 - r0(a,k)*r0(b,j)*gth(a,j)*gth(b,k);
+%    end end
+%  end; end
+%
+%  %
+%  for k=1:3; for j=1:3;
+%    for a=1:3; for b=1:3; for c=1:3;
+%      xx = (2*ee(a,b,c) + dd(c,a)*th(b) - dd(c,b)*th(a))*gth(c,j);
+%      e1 = e1 + xx*r0(a,k)*gr0(b,k,j);
+%      e2 = e2 + xx*r0(a,k)*gr0(b,j,k);
+%      e3 = e3 + xx*r0(a,j)*gr0(b,k,k);
+%    end; end; end;
+% end; end;
+
 
 
 \end{document}
