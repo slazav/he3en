@@ -1,4 +1,4 @@
-%% test a change of dipolar energy after a small rotation th
+%% test a change of gradient energy after a small rotation th
 function test_gr()
   addpath en
   for i=1:500;
