@@ -6,7 +6,7 @@ function test_d()
     a=rand*pi;
     b=rand*pi;
     t=rand*pi;
-    r = abt2r(a,b,t);
+    r = rmatr_abt(a,b,t);
     E0 = en_d0(r);
     E1 = en_d1(r);
     E2 = en_d2(t);
