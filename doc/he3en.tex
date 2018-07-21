@@ -146,7 +146,59 @@ expressions:
 %    end; end; end;
 % end; end;
 
+{\bf 7. Gradient torque in $\bf n$ and $\theta$ coordinates}
 
+{\tt test\_torque.m} script builds a rotation matrix with
+random first and second-order gradients on a $3\times3\times3$ grid.
+Formulas for $R_{aj}$, $\nabla_kR_{aj}$, $\nabla_l\nabla_kR_{aj}$ are checked:
+\begin{eqnarray}
+R_{aj} &=& \ct\ \delta_{aj} + (1-\ct)\ n_a n_j - \st\ e_{ajk}n_k
+\end{eqnarray}
+\begin{eqnarray}
+\nabla_k R_{aj} &=&
+\st\ (n_a n_j - \delta_{aj})\ \nabla_k\vartheta
+\\\nonumber &&
++ (1-\ct)\ (n_j \nabla_k n_a + n_a \nabla_k n_j)
+\\\nonumber &&
+- \ct\ e_{ajm} n_m\ \nabla_k\vartheta
+\\\nonumber &&
+- \st\ e_{ajm} \nabla_k n_m
+\end{eqnarray}
+\begin{eqnarray}
+\nabla_l \nabla_k R_{aj} &=&
++ \ct\ (n_a n_j - \delta_{aj})\ \nabla_l\vartheta\ \nabla_k\vartheta
+\\\nonumber &&
++ \st\ (n_j \nabla_l n_a + n_a \nabla_l n_j)\ \nabla_k\vartheta
+\\\nonumber &&
++ \st\ (n_a n_j - \delta_{aj})\ \nabla_l\nabla_k\vartheta
+\\\nonumber &&
++ (1-\ct)\ (\nabla_l n_j \nabla_k n_a + \nabla_l n_a \nabla_k n_j)
+\\\nonumber &&
++ (1-\ct)\ (n_j \nabla_l \nabla_k n_a + n_a \nabla_l \nabla_k n_j)
+\\\nonumber &&
++ \st\ (n_j \nabla_k n_a + n_a \nabla_k n_j)\nabla_l\vartheta
+\\\nonumber &&
++ \st\ e_{ajm}n_m\ \nabla_l\vartheta\ \nabla_k\vartheta
+\\\nonumber &&
+- \ct\ e_{ajm}\nabla_l n_m\ \nabla_k\vartheta
+\\\nonumber &&
+- \ct\ e_{ajm}n_m\ \nabla_l \nabla_k\vartheta
+\\\nonumber &&
+- \ct\ e_{ajm} \nabla_k n_m \nabla_l\vartheta
+\\\nonumber &&
+- \st\ e_{ajm} \nabla_l \nabla_k n_m
+\end{eqnarray}
+
+Then two terms of the gradient torque is checked:
+\begin{eqnarray}
+T_a^\nabla
+ &=& - e_{abc} R_{cj}
+  \Delta^2 \big[
+     K_1 (\nabla_k \nabla_k R_{bj})
+    + (K_2+K_3) (\nabla_k \nabla_j R_{bk}) \big]
+\end{eqnarray}
+
+Result is too heavy, more then~40 terms.
 
 \end{document}
 
