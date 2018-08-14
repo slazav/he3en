@@ -1,8 +1,7 @@
 % test gradient torque
-% create a random rotation matrix with a random gradient of
-
 % test for a single random matrix with gradient ~d
 function test_torque()
+  addpath en
   d = 0.00012
 
   % standard matrices
@@ -217,13 +216,162 @@ function test_torque()
        + dd(m,1) *ct*(1-ct) *ee(b,a,j) *vn(a) * ggn(j,k,k) ...
        + dd(m,1) *st*st     *ee(a,k,j) *vn(a) * ggn(k,b,j) ...
        - dd(m,1) *st*st     *ee(a,k,j) *vn(b) * ggn(k,a,j) ...
-       + (1-ct)*ee(b,a,m)*vn(m)*vn(j) * (1-ct)*vn(k)*ggn(j,k,a);
+       + (1-ct)^2* ee(b,a,m)*vn(m)*vn(j)*vn(k)*ggn(j,k,a);
 
   end; end; end; end; end;
 
   r1 = sum((T1a-T2a).^2);
   r2 = sum((T1b-T2b).^2);
   fprintf('test torque 2. A: %e B: %e\n', r1,r2);
+
+  %%%%%%%%%%%%%%%%%%%
+  % spin current 1
+  J1a=zeros(3,3);
+  J1b=zeros(3,3);
+  for a=1:3; for b=1:3; for c=1:3; for j=1:3; for k=1:3;
+    J1a(a,k) = J1a(a,k) + ee(a,b,c)*vR(c,j)*gR(k,b,j);
+    J1b(a,k) = J1b(a,k) + ee(a,b,c)*vR(c,j)*gR(j,b,k);
+  end; end; end; end; end;
+
+  %%%%%%%%%%%%%%%%%%%
+  % spin current 2
+  J2a=zeros(3,3);
+  J2b=zeros(3,3);
+  for a=1:3; for b=1:3; for c=1:3; for j=1:3; for k=1:3; for m=1:3;
+
+    J2a(a,k) = J2a(a,k) + ee(a,b,c)*vR(c,j)*(
+       + dd(m,1)*st*(vn(b)*vn(j)-dd(b,j))*gt(k) ...
+       + dd(m,1)*(1-ct)*(vn(j)*gn(k,b) + vn(b)*gn(k,j)) ...
+       - ct*ee(b,j,m)*vn(m) * gt(k) ...
+       - st*ee(b,j,m)*gn(k,m) ...
+    );
+    J2b(a,k) = J2b(a,k) + ee(a,b,c)*vR(c,j)*(
+       + dd(m,1)*st*(vn(b)*vn(k)-dd(b,k))*gt(j) ...
+       + dd(m,1)*(1-ct)*(vn(k)*gn(j,b) + vn(b)*gn(j,k)) ...
+       - ct*ee(b,k,m)*vn(m) * gt(j) ...
+       - st*ee(b,k,m)*gn(j,m) ...
+    );
+
+  end; end; end; end; end; end;
+
+  r1 = sum(sum((J1a-J2a).^2));
+  r2 = sum(sum((J1b-J2b).^2));
+  fprintf('test spin current 2. A: %e B: %e\n', r1,r2);
+
+  %%%%%%%%%%%%%%%%%%%
+  % spin current 3
+  J3a=zeros(3,3);
+  J3b=zeros(3,3);
+  for a=1:3; for b=1:3; for c=1:3; for j=1:3; for k=1:3; for m=1:3;
+
+    J3a(a,k) = J3a(a,k) + ee(a,b,c)*vR(c,j)*(
+       + dd(m,1)*st*(vn(b)*vn(j)-dd(b,j))*gt(k) ...
+       + dd(m,1)*(1-ct)*(vn(j)*gn(k,b) + vn(b)*gn(k,j)) ...
+       - ct*ee(b,j,m)*vn(m) * gt(k) ...
+       - st*ee(b,j,m)*gn(k,m) ...
+    );
+    J3b(a,k) = J3b(a,k) + ee(a,b,c)*vR(c,j)*(
+       + dd(m,1)*st*(vn(b)*vn(k)-dd(b,k))*gt(j) ...
+       + dd(m,1)*(1-ct)*(vn(k)*gn(j,b) + vn(b)*gn(j,k)) ...
+       - ct*ee(b,k,m)*vn(m) * gt(j) ...
+       - st*ee(b,k,m)*gn(j,m) ...
+    );
+  end; end; end; end; end; end;
+
+  r1 = sum(sum((J1a-J3a).^2));
+  r2 = sum(sum((J1b-J3b).^2));
+  fprintf('test spin current 2. A: %e B: %e\n', r1,r2);
+
+
+  %%%%%%%%%%%%%%%%%%%
+  % spin current 1z
+  J1za=zeros(3,1);
+  J1zb=zeros(3,1);
+  for a=1:3; for b=1:3; for c=1:3; for j=1:3;
+    J1za(a) = J1za(a) + ee(a,b,c)*vR(c,j)*gR(3,b,j);
+    J1zb(a) = J1zb(a) + dd(j,3)*ee(a,b,c)*vR(c,3)*gR(3,b,3);
+  end; end; end; end;
+
+  %%%%%%%%%%%%%%%%%%%
+  % spin current 2z
+  J2za=zeros(3,1);
+  J2zb=zeros(3,1);
+
+  for a=1:3; for b=1:3; for c=1:3; for j=1:3; for m=1:3;
+
+    J2za(a) = J2za(a) + ee(a,b,c)*vR(c,j)*(
+       + dd(m,1)*st*(vn(b)*vn(j)-dd(b,j))*gt(3) ...
+       + dd(m,1)*(1-ct)*(vn(j)*gn(3,b) + vn(b)*gn(3,j)) ...
+       - ct*ee(b,j,m)*vn(m) * gt(3) ...
+       - st*ee(b,j,m)*gn(3,m) ...
+    );
+    J2zb(a) = J2zb(a) + ee(a,b,c)*vR(c,3)*dd(j,3)*(
+       + dd(m,1)*st*(vn(b)*vn(3)-dd(b,3))*gt(3) ...
+       + dd(m,1)*(1-ct)*(vn(3)*gn(3,b) + vn(b)*gn(3,3)) ...
+       - ct*ee(b,3,m)*vn(m) * gt(3) ...
+       - st*ee(b,3,m)*gn(3,m) ...
+    );
+
+  end; end; end; end; end;
+  r1 = sum((J1za-J2za).^2);
+  r2 = sum((J1zb-J2zb).^2);
+  fprintf('test spin current 2z. A: %e B: %e\n', r1,r2);
+
+  %%%%%%%%%%%%%%%%%%%
+  % spin current 3z
+  J3za=zeros(3,1);
+  J3zb=zeros(3,1);
+
+  for a=1:3; for b=1:3; for m=1:3;
+
+    J3za(a) = J3za(a) + (...
+     -    2      *dd(m,1)*dd(b,1)*(vn(a)*gt(3) + st*gn(3,a)) ...
+     + 2*(1-ct)  *ee(a,m,b)*vn(b)*gn(3,m) ...
+    );
+    J3zb(a) = J3zb(a) + (
+     + st        *dd(m,1) *ee(a,b,3) *vn(b)  *vn(3)*gt(3) ...
+     + ct        *dd(m,1)*dd(b,1)*dd(a,3)    *vn(3)*gt(3) ...
+     -           dd(b,1)*dd(m,1)              *vn(a)*gt(3) ...
+     + (1-ct)   *dd(b,1)*dd(m,1) *vn(3)*vn(3) *vn(a)*gt(3) ...
+%
+     + ct*(1-ct) *dd(m,1) *ee(a,b,3) *vn(3)*gn(3,b) ...
+     + (1-ct)^2  *ee(a,b,m)*vn(m)*vn(3)*vn(3)*gn(3,b) ...
+     + st*st     *dd(a,3) *ee(m,3,b)*vn(m)*gn(3,b)
+     + ct*(1-ct) *dd(m,1) *ee(a,b,3) *vn(b)*gn(3,3) ...
+     - st*(1-2*ct) *dd(m,1)*dd(b,1)*dd(a,3) *gn(3,3) ...
+     + st*(1-ct) *dd(b,1)*dd(m,1) * 2*vn(a)*vn(3)*gn(3,3) ...
+     - ct*st     *dd(b,1)*dd(m,1) *gn(3,a) ...
+     - st*(1-ct) *dd(b,1)*dd(m,1) *vn(3)*vn(3) *gn(3,a) ...
+    );
+
+  end; end; end;
+  r1 = sum((J1za-J3za).^2);
+  r2 = sum((J1zb-J3zb).^2);
+  fprintf('test spin current 3z. A: %e B: %e\n', r1,r2);
+
+
+  %%%%%%%%%%%%%%%%%%%
+  % spin current 4z (in Dmitriev's program)
+  J4za=zeros(3,1);
+  J4zb=zeros(3,1);
+
+  DD45 = vn(1)*gn(3,2)-vn(2)*gn(3,1); % Nx Ny' - Ny Nx'
+  FTN=(1-ct)*DD45 - st*gn(3,3) - gt(3)*vn(3);
+  UJX = 2.0*(gt(3)*vn(1)+st*gn(3,1)+(1-ct)*(vn(2)*gn(3,3)-gn(3,2)*vn(3))) ...
+     + ((1-ct)*vn(1)*vn(3)+vn(2)*st)*FTN;
+  UJY=2.0D0*(gt(3)*vn(2)+st*gn(3,2)-(1-ct)*(vn(1)*gn(3,3)-gn(3,1)*vn(3))) ...
+     +   ((1-ct)*vn(2)*vn(3)-vn(1)*st)*FTN;
+  UJZ=2.0D0*(gt(3)*vn(3)+st*gn(3,3)+(1-ct)*(vn(1)*gn(3,2)-gn(3,1)*vn(2))) ...
+     +   ((1-ct)*vn(3)**2+ct)*FTN;
+
+  J4z = [UJX; UJY; UJZ];
+  r1 = sum((J1za + 2*J1za - J4z).^2);
+  fprintf('test spin current 4z. %e\n', r1);
+
+  fprintf('test spin current 4z. %f %f %f\n', -J4z);
+  fprintf('test spin current 4z. %f %f %f\n', J1za);
+  fprintf('test spin current 4z. %f %f %f\n', J1zb);
+
 
 
 end
