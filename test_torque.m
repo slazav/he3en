@@ -110,6 +110,19 @@ function test_torque()
 
   fprintf('test ggR: %e / %e\n', r, r0);
 
+  %%%%%%%%%%%%%%%%%%%
+  %test 3 -- gRgR
+  testgRgR1 = zeros(3,1);
+  testgRgR2 = zeros(3,1);
+   for a=1:3; for b=1:3; for c=1:3; for j=1:3; for k=1:3;
+    testgRgR1(a) = testgRgR1(a) + ee(a,b,c)*gR(k,c,j)*gR(k,b,j);
+    testgRgR2(a) = testgRgR2(a) + ee(a,b,c)*gR(k,c,j)*gR(j,b,k);
+  end; end; end; end; end
+ 
+  r1 = sum(sum(sum(sum((testgRgR1).^2))));
+  r2 = sum(sum(sum(sum((testgRgR2).^2))));
+
+  fprintf('test gRgR: %e %e\n', r1, r2);
 
   %%%%%%%%%%%%%%%%%%%
   % torque-1
